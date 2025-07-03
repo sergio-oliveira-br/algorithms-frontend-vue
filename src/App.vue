@@ -16,9 +16,44 @@
             </router-link>
           </li>
 
+          <li class="text-lg text-sky-200 mt-3">Linear Search</li>
           <li>
-            <router-link to="/" class="block px-4 py-2 rounded-lg text-lg font-medium
-              hover:bg-gray-700 transition duration-200 ease-in-out">Other
+            <router-link to="/" class="block px-4 py-2 rounded-lg text-sm font-medium
+              hover:bg-gray-700 transition duration-200 ease-in-out">Find Min & Max
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/" class="block px-4 py-2 rounded-lg text-sm font-medium
+              hover:bg-gray-700 transition duration-200 ease-in-out">Check Duplicates
+            </router-link>
+          </li>
+
+          <li class="text-lg text-sky-200 mt-3">Single Linked List</li>
+          <li>
+            <router-link to="/" class="block px-4 py-2 rounded-lg text-sm font-medium
+              hover:bg-gray-700 transition duration-200 ease-in-out">Insert an Element
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/" class="block px-4 py-2 rounded-lg text-sm font-medium
+              hover:bg-gray-700 transition duration-200 ease-in-out">Delete an Element
+            </router-link>
+          </li>
+
+          <li class="text-lg text-sky-200 mt-3">Double Linked List</li>
+          <li>
+            <router-link to="/" class="block px-4 py-2 rounded-lg text-sm font-medium
+              hover:bg-gray-700 transition duration-200 ease-in-out">Insert an Element
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/" class="block px-4 py-2 rounded-lg text-sm font-medium
+              hover:bg-gray-700 transition duration-200 ease-in-out">Delete an Element
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/" class="block px-4 py-2 rounded-lg text-sm font-medium
+              hover:bg-gray-700 transition duration-200 ease-in-out">Remove Duplicates
             </router-link>
           </li>
         </ul>
@@ -29,8 +64,6 @@
       <router-view></router-view>
     </main>
   </div>
-
-
 </template>
 
 <style scoped>/*Tailwind styles are applied via classes*/</style>
