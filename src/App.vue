@@ -41,6 +41,14 @@ const backendFetchMessage = async () => {
       <p v-if="errorMessage" class="text-red mt-4 text-sm">{{errorMessage}}</p>
     </div>
   </div>
+
+  <div>
+    <main class="flex-grow p-8 flex items-start justify-center">
+      <router-view></router-view>
+    </main>
+  </div>
+
+
 </template>
 
 <style scoped>
