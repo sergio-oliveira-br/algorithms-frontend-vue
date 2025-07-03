@@ -16,6 +16,13 @@
             </router-link>
           </li>
 
+          <li class="text-lg text-sky-200 mt-3">Sort</li>
+          <li>
+            <router-link to="/algorithms/sorting-algorithm" class="block px-4 py-2 rounded-lg text-sm font-medium
+              hover:bg-gray-700 transition duration-200 ease-in-out">Generate and Sort
+            </router-link>
+          </li>
+
           <li class="text-lg text-sky-200 mt-3">Linear Search</li>
           <li>
             <router-link to="/" class="block px-4 py-2 rounded-lg text-sm font-medium
