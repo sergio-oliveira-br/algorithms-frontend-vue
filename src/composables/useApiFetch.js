@@ -38,7 +38,7 @@ export function useApiFetch(){
         }
         catch(error){
             console.error('API Fetch Error: ', error);
-            alert('API Fetch Error: '+ error)
+            alert('Sorry, an error has occurred.');
         }
         finally {
             loading.value = false;
