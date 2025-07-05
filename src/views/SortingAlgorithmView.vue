@@ -60,9 +60,34 @@
                 text-neutral-500 font-bold
                   shadow-sm hover:shadow-lg
                     ease-in-out">{{ isGeneratedApiLoading ? 'Generating...' : 'Generate Numbers' }}
-        Generate
       </button>
-      
+
+      <div v-if="generatedNumbersArray.length > 0" class=" p-4 bg-gray-50 rounded-lg">
+        <form>
+          <input type="checkbox" id="" name="" value="">
+          <label for=""> Bubble Sort</label><br>
+
+          <input type="checkbox" id="" name="" value="">
+          <label for=""> Tim Sort</label><br>
+
+          <input type="checkbox" id="" name="" value="">
+          <label for=""> Selection Sort</label><br>
+
+          <input type="checkbox" id="" name="" value="">
+          <label for=""> Insertion Sort</label><br>
+
+        </form>
+        <button v-if="generatedNumbersArray.length > 0"
+                class=" w-full p-2 my-2
+                  bg-slate-100
+                    rounded-lg border border-slate-200
+                      text-neutral-500 font-bold
+                        shadow-sm hover:shadow-lg">
+          Sort
+        </button>
+      </div>
+
+
       <div v-if="generatedNumbersArray.length > 0" class="mt-4 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
         <h4 class="text-lg font-semibold text-indigo-800 mb-2">Generated Numbers:</h4>
         <p class="font-mono text-indigo-700 break-all text-sm">{{ generatedNumbersArray.join(', ') }}</p>
