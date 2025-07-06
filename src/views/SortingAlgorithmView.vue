@@ -38,6 +38,42 @@
       generatedNumbersArray.value = generatedApiData.value;
     }
   };
+
+
+  // Function to be called by the clinck "Sort" button
+  const sortAlgorithms = async () => {
+
+    const {
+      data: sortedNumbersApiData,   // Renamed to be specific for sorting
+      loading: isSortingApiLoading, // Renamed for clarity and independence
+      errorMsg: sortApiError,       // Renamed for clarity and independence
+      fetchData: callSortAlgorithmApi,
+    } = useApiFetch();
+
+    console.log(generatedNumbersArray.value);
+    console.log("data: ", sortedNumbersApiData);
+
+    const url = `http://localhost:8080/api/v1/sort/algorithms?generatedNumbersArray=${generatedNumbersArray.value}`;
+    const numbersToSend = generatedNumbersArray.value;
+
+    console.log("numbers: ", numbersToSend);
+
+    await callSortAlgorithmApi(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // IMPORTANT: Tell the backend it's JSON!
+      },
+      body: JSON.stringify(numbersToSend), // IMPORTANT: Send array as JSON string in the body!
+    });
+
+    if (sortApiError.value) {
+      errorMessage.value = sortApiError.value;
+    }
+    else if (sortedNumbersApiData.value) {
+      generatedNumbersArray.value = sortedNumbersApiData.value;
+      errorMessage.value = ''; // Clear any previous errors
+    }
+  };
 </script>
 
 <template>
@@ -64,7 +100,7 @@
 
       <div v-if="generatedNumbersArray.length > 0" class=" p-4 bg-gray-50 rounded-lg">
         <form>
-          <input type="checkbox" id="" name="" value="">
+          <input type="checkbox" id="" name="generatedNumbersArray" >
           <label for=""> Bubble Sort</label><br>
 
           <input type="checkbox" id="" name="" value="">
@@ -77,7 +113,9 @@
           <label for=""> Insertion Sort</label><br>
 
         </form>
-        <button v-if="generatedNumbersArray.length > 0"
+        <button
+            @click="sortAlgorithms"
+            v-if="generatedNumbersArray.length > 0"
                 class=" w-full p-2 my-2
                   bg-slate-100
                     rounded-lg border border-slate-200
