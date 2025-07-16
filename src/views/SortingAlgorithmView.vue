@@ -54,11 +54,19 @@
 
     console.log("Selected Algorithm to send:", selectedSortAlgorithm.value);
 
-    console.log(generatedNumbersArray.value);
-    console.log("data: ", sortedNumbersApiData);
+    // Validation before sending to backend
+    if(!generatedApiData.value || generatedApiData.value.length < 1) {
+      errorMessage.value = 'Please generate numbers first before sorting.';
+      return;
+    }
 
     const url = `http://localhost:8080/api/v1/sort/algorithms?generatedNumbersArray=${generatedNumbersArray.value}`;
     const numbersToSend = generatedNumbersArray.value;
+    // Validation before sending to backend
+    if(!selectedSortAlgorithm.value){
+      errorMessage.value = 'Please select a sort algorithm';
+      return;
+    }
 
     console.log("numbers: ", numbersToSend);
 
