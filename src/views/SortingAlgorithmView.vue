@@ -15,6 +15,15 @@
     fetchData: callGenerateApi,
   } = useApiFetch();
 
+  // Instância do composable
+  // Renamed variables returned to avoid name conflicts in the component
+  const {
+    data: sortedNumbersApiData,   // Renamed to be specific for sorting
+    loading: isSortingApiLoading, // Renamed for clarity and independence
+    errorMsg: sortApiError,       // Renamed for clarity and independence
+    fetchData: callSortAlgorithmApi,
+  } = useApiFetch();
+
   // Function to be called by the clinck "Generate" button
   const generateNumbers = async () => {
 
@@ -43,12 +52,7 @@
   // Function to be called by the clinck "Sort" button
   const sortAlgorithms = async () => {
 
-    const {
-      data: sortedNumbersApiData,   // Renamed to be specific for sorting
-      loading: isSortingApiLoading, // Renamed for clarity and independence
-      errorMsg: sortApiError,       // Renamed for clarity and independence
-      fetchData: callSortAlgorithmApi,
-    } = useApiFetch();
+    console.log("Selected Algorithm to send:", selectedSortAlgorithm.value);
 
     console.log(generatedNumbersArray.value);
     console.log("data: ", sortedNumbersApiData);
