@@ -7,6 +7,10 @@
   const generatedNumbersArray  = ref([]);
   const errorMessage = ref('');
 
+  // Ref for the selected sorting strategy (we will use a radio button or logic for single selection)
+  const selectedSortAlgorithm = ref('bubbleSortService');
+
+  // Instância do composable
   // Renamed variables returned to avoid name conflicts in the component
   const {
     data: generatedApiData,
@@ -60,15 +64,16 @@
       return;
     }
 
-    const url = `http://localhost:8080/api/v1/sort/algorithms?generatedNumbersArray=${generatedNumbersArray.value}`;
-    const numbersToSend = generatedNumbersArray.value;
     // Validation before sending to backend
     if(!selectedSortAlgorithm.value){
       errorMessage.value = 'Please select a sort algorithm';
       return;
     }
 
-    console.log("numbers: ", numbersToSend);
+    // Build URL with multiple RequestParams
+    const url = `http://localhost:8080/api/v1/sort/algorithms?selectedAlgorithm=${selectedSortAlgorithm.value}`;
+
+    const numbersToSend = generatedNumbersArray.value;
 
     await callSortAlgorithmApi(url, {
       method: 'POST',
