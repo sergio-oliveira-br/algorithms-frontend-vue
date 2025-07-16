@@ -117,17 +117,19 @@
 
       <div v-if="generatedNumbersArray.length > 0" class=" p-4 bg-gray-50 rounded-lg">
         <form>
-          <input type="checkbox" id="" name="generatedNumbersArray" >
-          <label for=""> Bubble Sort</label><br>
+          <input type="radio" id="bubbleSort" v-model="selectedSortAlgorithm"
+                 name="sortStrategy"  value="bubbleSortService" class="mr-2">
+          <label for="bubbleSort"> Bubble Sort</label><br>
 
-          <input type="checkbox" id="" name="" value="">
-          <label for=""> Tim Sort</label><br>
+          <input type="radio" id="timSort" v-model="selectedSortAlgorithm"
+                 name="sortStrategy" value="timSortService" class="mr-2">
+          <label for="timSort"> Tim Sort</label><br>
 
-          <input type="checkbox" id="" name="" value="">
-          <label for=""> Selection Sort</label><br>
+<!--          <input type="radio" id="" name="" value="" disabled>-->
+<!--          <label for=""> Selection Sort</label><br>-->
 
-          <input type="checkbox" id="" name="" value="">
-          <label for=""> Insertion Sort</label><br>
+<!--          <input type="radio" id="" name="" value="" disabled>-->
+<!--          <label for=""> Insertion Sort</label><br>-->
 
         </form>
         <button
