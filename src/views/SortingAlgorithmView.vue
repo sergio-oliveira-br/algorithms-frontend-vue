@@ -35,8 +35,16 @@
     errorMessage.value = '';
     generatedNumbersArray.value = [];
 
-    if (numberOfNumbersToGenerate.value <= 0 ){
-      generatedApiError.value = 'This number must be greater than 0.'
+    // First verification, check if is a number
+    if (isNaN(numberOfNumbersToGenerate.value) || typeof numberOfNumbersToGenerate.value !== 'number') {
+      errorMessage.value = 'Please enter a valid number.';
+      return;
+    }
+
+    // First verification, check if is the number if greater than 0
+    if (numberOfNumbersToGenerate.value <= 0 ){ // Captura 0 e negativos
+      errorMessage.value = 'This number must be greater than 0.'
+      return;
     }
 
     const url = `http://localhost:8080/api/v1/sort/generator?qtyOfNumbersToGenerate=${numberOfNumbersToGenerate.value}`;
