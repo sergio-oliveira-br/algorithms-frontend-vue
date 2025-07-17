@@ -23,22 +23,21 @@ export function useApiFetch(){
 
             // If error, try to read the error from the response body
             if (!response.ok) {
-               const errorText = await response.text();
-               throw new Error (`HTTP error! Status: ${response.status} - ${errorText} || ${response.statusText}`);
+                try{
+                    const errorText = await response.json();
+                    errorMsg.value = errorText.message || JSON.stringify(errorText);
+                }
+                catch (parseError){
+                    // If you can’t parse as JSON, it’s a plain text or no body error
+                    errorMsg.value = `HTTP error! Status: ${response.status} - ${response.statusText}`;
+                }
+                return; // This is to avoid processing as success
             }
-
-            //Attempts to parse the answer as JSON. If it is not JSON, returns the raw text.
-            try{
-                data.value = await response.json();
-            }
-            //If the answer is not JSON (ex: simple string), use response.text()
-            catch(jsonError){
-                data.value = await response.text();
-            }
+            data.value = await response.json();
         }
         catch(error){
-            console.error('API Fetch Error: ', error);
-            alert('Sorry, an error has occurred.');
+            errorMsg.value = `Network error or CORS issue: ${error.message}`;
+            console.error('Fetch error:', error);
         }
         finally {
             loading.value = false;
