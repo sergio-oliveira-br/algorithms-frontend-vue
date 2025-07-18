@@ -138,6 +138,10 @@
                  name="sortStrategy" value="timSortService" class="mr-2">
           <label for="timSort"> Tim Sort</label><br>
 
+          <input type="radio" id="test" v-model="selectedSortAlgorithm"
+                 name="sortStrategy" value="test" class="mr-2">
+          <label for="test"> Test</label><br>
+
 <!--          <input type="radio" id="" name="" value="" disabled>-->
 <!--          <label for=""> Selection Sort</label><br>-->
 
