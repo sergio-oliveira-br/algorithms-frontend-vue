@@ -123,10 +123,7 @@
                     ease-in-out">{{ isGeneratedApiLoading ? 'Generating...' : 'Generate Numbers' }}
       </button>
 
-      <div v-if="errorMessage" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg" role="alert">
-        <p class="font-bold">Error:</p>
-        <p>{{ errorMessage }}</p>
-      </div>
+
 
       <div v-if="generatedNumbersArray.length > 0" class=" p-4 bg-gray-50 rounded-lg">
         <form>
@@ -159,6 +156,11 @@
                         shadow-sm hover:shadow-lg">
           Sort
         </button>
+      </div>
+
+      <div v-if="errorMessage" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg" role="alert">
+        <p class="font-bold">Error:</p>
+        <p>{{ errorMessage }}</p>
       </div>
 
 
