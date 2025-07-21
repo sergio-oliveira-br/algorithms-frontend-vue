@@ -94,9 +94,13 @@
     if (sortApiError.value) {
       errorMessage.value = sortApiError.value;
     }
-    else if (sortedNumbersApiData.value) {
-      generatedNumbersArray.value = sortedNumbersApiData.value;
+    else if (sortedNumbersApiData.value.sortedArray) {
+      generatedNumbersArray.value = sortedNumbersApiData.value.sortedArray;
       errorMessage.value = ''; // Clear any previous errors
+
+      // Optional: Log the performance data to the console for debugging
+      console.log(`Duration (ms): ${sortedNumbersApiData.value.durationNanos}`);
+
     }
   };
 </script>
