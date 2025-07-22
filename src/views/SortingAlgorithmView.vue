@@ -143,15 +143,15 @@
 
       <div v-if="generatedNumbersArray.length > 0" class=" p-4 bg-gray-50 rounded-lg">
         <form>
-          <input type="radio" id="bubbleSort" v-model="selectedSortAlgorithm"
+          <input type="checkbox" id="bubbleSort" v-model="selectedSortAlgorithms"
                  name="sortStrategy"  value="bubbleSortService" class="mr-2">
           <label for="bubbleSort"> Bubble Sort</label><br>
 
-          <input type="radio" id="timSort" v-model="selectedSortAlgorithm"
+          <input type="checkbox" id="timSort" v-model="selectedSortAlgorithms"
                  name="sortStrategy" value="timSortService" class="mr-2">
           <label for="timSort"> Tim Sort</label><br>
 
-          <input type="radio" id="test" v-model="selectedSortAlgorithm"
+          <input type="checkbox" id="test" v-model="selectedSortAlgorithms"
                  name="sortStrategy" value="test" class="mr-2">
           <label for="test"> Test</label><br>
 
