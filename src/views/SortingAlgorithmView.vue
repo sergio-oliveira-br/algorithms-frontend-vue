@@ -172,14 +172,14 @@
         <p>{{ errorMessage }}</p>
       </div>
 
-
-      <div v-if="generatedNumbersArray.length > 0" class="mt-4 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-
+      <div v-if="lastSortedResult" class="mt-4 p-4 bg-stone-50 rounded-lg border border-stone-300">
         <h4 class="text-lg font-semibold text-indigo-800 mb-2"> Elapsed Time </h4>
         <p v-if="sortedNumbersApiData && sortedNumbersApiData.durationNanos !== undefined" class="mt-2 text-indigo-900 font-semibold">
           Sorted by {{ sortedNumbersApiData.algorithmUsed }}: {{ sortedNumbersApiData.durationNanos }} ns
         </p>
-        <br>
+      </div>
+
+      <div v-if="generatedNumbersArray.length > 0" class="mt-4 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
         <h4 class="text-lg font-semibold text-indigo-800 mb-2">Generated Numbers:</h4>
         <p class="font-mono text-indigo-700 break-all text-sm">{{ generatedNumbersArray.join(', ') }}</p>
       </div>
