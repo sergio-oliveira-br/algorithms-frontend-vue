@@ -6,6 +6,7 @@
   const numberOfNumbersToGenerate = ref(50);
   const generatedNumbersArray  = ref([]);
   const errorMessage = ref('');
+  const lastSortedResult = ref(null);
 
   // Ref for the selected sorting strategy (we will use a radio button or logic for single selection)
   const selectedSortAlgorithm = ref('bubbleSortService');
@@ -34,6 +35,7 @@
     //cleanup
     errorMessage.value = '';
     generatedNumbersArray.value = [];
+    lastSortedResult.value = null;
 
     // First verification, check if is a number
     if (isNaN(numberOfNumbersToGenerate.value) || typeof numberOfNumbersToGenerate.value !== 'number') {
@@ -65,6 +67,7 @@
   const sortAlgorithms = async () => {
 
     console.log("Selected Algorithm to send:", selectedSortAlgorithm.value);
+    lastSortedResult.value = null;
 
     // Validation before sending to backend
     if(!generatedApiData.value || generatedApiData.value.length < 1) {
@@ -97,6 +100,8 @@
     else if (sortedNumbersApiData.value.sortedArray) {
       generatedNumbersArray.value = sortedNumbersApiData.value.sortedArray;
       errorMessage.value = ''; // Clear any previous errors
+
+      lastSortedResult.value = sortedNumbersApiData.value;
 
       // Optional: Log the performance data to the console for debugging
       console.log(`Duration (ms): ${sortedNumbersApiData.value.durationNanos}`);
