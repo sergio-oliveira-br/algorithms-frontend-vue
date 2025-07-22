@@ -6,10 +6,12 @@
   const numberOfNumbersToGenerate = ref(50);
   const generatedNumbersArray  = ref([]);
   const errorMessage = ref('');
-  const lastSortedResult = ref(null);
 
-  // Ref for the selected sorting strategy (we will use a radio button or logic for single selection)
-  const selectedSortAlgorithm = ref('bubbleSortService');
+  // This is an ARRAY for checkboxes
+  const selectedSortAlgorithms = ref([]);
+
+  // There is an object in this array --> { algorithm: 'nome', sortedArray: [], durationMillis: ... }
+  const sortedResults = ref([]);
 
   // Instância do composable
   // Renamed variables returned to avoid name conflicts in the component
@@ -23,7 +25,7 @@
   // Instância do composable
   // Renamed variables returned to avoid name conflicts in the component
   const {
-    data: sortedNumbersApiData,   // Renamed to be specific for sorting
+    data: multiSortApiData,   // Renamed to be specific for sorting
     loading: isSortingApiLoading, // Renamed for clarity and independence
     errorMsg: sortApiError,       // Renamed for clarity and independence
     fetchData: callSortAlgorithmApi,
@@ -35,7 +37,7 @@
     //cleanup
     errorMessage.value = '';
     generatedNumbersArray.value = [];
-    lastSortedResult.value = null;
+    sortedResults.value = [];
 
     // First verification, check if is a number
     if (isNaN(numberOfNumbersToGenerate.value) || typeof numberOfNumbersToGenerate.value !== 'number') {
@@ -44,7 +46,7 @@
     }
 
     // First verification, check if is the number if greater than 0
-    if (numberOfNumbersToGenerate.value <= 0 ){ // Captura 0 e negativos
+    if (numberOfNumbersToGenerate.value <= 0 ){
       errorMessage.value = 'This number must be greater than 0.'
       return;
     }
@@ -66,8 +68,8 @@
   // Function to be called by the clinck "Sort" button
   const sortAlgorithms = async () => {
 
-    console.log("Selected Algorithm to send:", selectedSortAlgorithm.value);
-    lastSortedResult.value = null;
+    sortedResults.value = [];
+    errorMessage.value = '';
 
     // Validation before sending to backend
     if(!generatedApiData.value || generatedApiData.value.length < 1) {
@@ -76,36 +78,41 @@
     }
 
     // Validation before sending to backend
-    if(!selectedSortAlgorithm.value){
-      errorMessage.value = 'Please select a sort algorithm';
+    if(!selectedSortAlgorithms.value || selectedSortAlgorithms.value.length === 0){
+      errorMessage.value = 'Please select at least one sort algorithm.';
       return;
     }
 
-    // Build URL with multiple RequestParams
-    const url = `http://localhost:8080/api/v1/sort/algorithms?selectedAlgorithm=${selectedSortAlgorithm.value}`;
+    // Creates a copy of the original array for each algorithm
+    // ESSENTIAL: so that each algorithm orders the original array, not the one already ordered or modified by another
+    const arrayCopyForSorting = [...generatedNumbersArray.value];
 
-    const numbersToSend = generatedNumbersArray.value;
+    // Build URL with multiple RequestParams
+    const url = `http://localhost:8080/api/v1/sort/algorithms?selectedAlgorithms=${selectedSortAlgorithms.value.join(',')}`;
 
     await callSortAlgorithmApi(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json', // IMPORTANT: Tell the backend it's JSON!
       },
-      body: JSON.stringify(numbersToSend), // IMPORTANT: Send array as JSON string in the body!
+      body: JSON.stringify(arrayCopyForSorting), // IMPORTANT: Send array as JSON string in the body!
     });
 
     if (sortApiError.value) {
       errorMessage.value = sortApiError.value;
     }
-    else if (sortedNumbersApiData.value.sortedArray) {
-      generatedNumbersArray.value = sortedNumbersApiData.value.sortedArray;
-      errorMessage.value = ''; // Clear any previous errors
+    else if (multiSortApiData.value && Array.isArray(multiSortApiData.value) && multiSortApiData.value.length > 0) {
+      // Adds the COMPLETE result of the response DTO to the results array
+      sortedResults.value = (multiSortApiData.value);
+      errorMessage.value = ''; // Success, clears error
 
-      lastSortedResult.value = sortedNumbersApiData.value;
-
-      // Optional: Log the performance data to the console for debugging
-      console.log(`Duration (ms): ${sortedNumbersApiData.value.durationNanos}`);
-
+      // Adicionar esta linha novamente para atualizar a exibição do array ordenado
+      generatedNumbersArray.value = multiSortApiData.value[0].sortedArray;
+    }
+  else{
+      // If the API returns an empty array or unexpected data, display an error message.
+      errorMessage.value = 'No algorithms returned a successful sort result.';
+      console.error('Unexpected sort API data:', multiSortApiData.value);
     }
   };
 </script>
