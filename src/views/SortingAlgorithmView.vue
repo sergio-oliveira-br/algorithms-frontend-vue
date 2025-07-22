@@ -179,11 +179,14 @@
         <p>{{ errorMessage }}</p>
       </div>
 
-      <div v-if="lastSortedResult" class="mt-4 p-4 bg-stone-50 rounded-lg border border-stone-300">
-        <h4 class="text-lg font-semibold text-indigo-800 mb-2"> Elapsed Time </h4>
-        <p v-if="sortedNumbersApiData && sortedNumbersApiData.durationNanos !== undefined" class="mt-2 text-indigo-900 font-semibold">
-          Sorted by {{ sortedNumbersApiData.algorithmUsed }}: {{ sortedNumbersApiData.durationNanos }} ns
-        </p>
+      <div v-if="sortedResults.length > 0" class="mt-4 p-4 bg-lime-50 rounded-lg border border-lime-200">
+        <h4 class="text-lg font-semibold text-lime-800 mb-2">Elapsed Times:</h4>
+        <div v-for="result in sortedResults" :key="result.algorithmUsed" class="mb-2 last:mb-0">
+          <p class="font-mono text-lime-700 break-all text-sm">
+            **Algorithm:** {{ result.algorithmUsed }}<br>
+            **Time:** {{ result.durationMillis }} ms ({{ result.durationNanos }} ns)
+          </p>
+        </div>
       </div>
 
       <div v-if="generatedNumbersArray.length > 0" class="mt-4 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
