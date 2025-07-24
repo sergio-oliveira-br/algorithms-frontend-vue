@@ -51,6 +51,11 @@
       return;
     }
 
+    if (numberOfNumbersToGenerate.value >= 1000 ){
+      errorMessage.value = 'This number cannot be greater than 1000.';
+      return;
+    }
+
     const url = `http://localhost:8080/api/v1/sort/generator?qtyOfNumbersToGenerate=${numberOfNumbersToGenerate.value}`;
 
     await callGenerateApi(url, {method: 'POST'});
