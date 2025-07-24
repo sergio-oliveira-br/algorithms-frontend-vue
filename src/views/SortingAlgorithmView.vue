@@ -151,12 +151,13 @@
                  name="sortStrategy" value="timSortService" class="mr-2">
           <label for="timSort"> Tim Sort</label><br>
 
+          <input type="checkbox" id="insertionSort" v-model="selectedSortAlgorithms"
+                name="sortStrategy" value="insertionSortService" class="mr-2">
+          <label for="insertionSort"> Insertion Sort</label><br>
+
           <input type="checkbox" id="test" v-model="selectedSortAlgorithms"
                  name="sortStrategy" value="test" class="mr-2">
           <label for="test"> Test</label><br>
-
-<!--          <input type="radio" id="" name="" value="" disabled>-->
-<!--          <label for=""> Selection Sort</label><br>-->
 
 <!--          <input type="radio" id="" name="" value="" disabled>-->
 <!--          <label for=""> Insertion Sort</label><br>-->
