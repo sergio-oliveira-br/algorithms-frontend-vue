@@ -29,7 +29,12 @@ export function useApiFetch(){
                 }
                 catch (parseError){
                     // If you can’t parse as JSON, it’s a plain text or no body error
-                    errorMsg.value = `HTTP error! Status: ${response.status} - ${response.statusText}`;
+                    if(response.statusText) {
+                        errorMsg.value = `HTTP error! Status: ${response.status} - ${response.statusText}`;
+                    }
+                    else{
+                        errorMsg.value = `HTTP error! Status: ${response.status} - ${parseError}`;
+                    }
                 }
                 return; // This is to avoid processing as success
             }
