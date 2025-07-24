@@ -46,8 +46,8 @@
     }
 
     // First verification, check if is the number if greater than 0
-    if (numberOfNumbersToGenerate.value <= 0 ){
-      errorMessage.value = 'This number must be greater than 0.'
+    if (numberOfNumbersToGenerate.value <= 1 ){
+      errorMessage.value = 'This number must be greater than 1.'
       return;
     }
 
