@@ -160,12 +160,13 @@
                 name="sortStrategy" value="insertionSortService" class="mr-2">
           <label for="insertionSort"> Insertion Sort</label><br>
 
+          <input type="checkbox" id="selectionSort" v-model="selectedSortAlgorithms"
+                name="sortStrategy" value="selectionSortService" class="mr-2">
+          <label for=""> Selection Sort</label><br>
+
           <input type="checkbox" id="test" v-model="selectedSortAlgorithms"
                  name="sortStrategy" value="test" class="mr-2">
           <label for="test"> Test</label><br>
-
-<!--          <input type="radio" id="" name="" value="" disabled>-->
-<!--          <label for=""> Insertion Sort</label><br>-->
 
         </form>
         <button
