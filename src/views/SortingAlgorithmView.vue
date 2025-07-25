@@ -1,6 +1,7 @@
 <script setup>
   import {ref} from 'vue';
   import {useApiFetch} from '../composables/useApiFetch.js';
+  import SortPerformanceChart from "@/components/SortPerformanceChart.vue";
 
   // --- Logic for the Random Number Generator --
   const numberOfNumbersToGenerate = ref(50);
@@ -199,6 +200,10 @@
       <div v-if="generatedNumbersArray.length > 0" class="mt-4 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
         <h4 class="text-lg font-semibold text-indigo-800 mb-2">Generated Numbers:</h4>
         <p class="font-mono text-indigo-700 break-all text-sm">{{ generatedNumbersArray.join(', ') }}</p>
+      </div>
+
+      <div v-if="sortedResults.length > 0" class="mt-4 p-4 bg-white rounded-lg shadow-inner">
+        <SortPerformanceChart :chartData="sortedResults" />
       </div>
 
     </div>
