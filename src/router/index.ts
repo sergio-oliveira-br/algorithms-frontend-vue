@@ -1,10 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router';
+// src/router/index.ts
+
+import { createRouter, createWebHistory, RouteRecordRaw} from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import SortingAlgorithmView from "../views/SortingAlgorithmView.vue";
 import LinearSearchMinMax from "@/views/LinearSearchMinMax.vue";
 
 
-const routes = [
+const routes: RouteRecordRaw[] = [
     {
         path: '/',
         name: 'home',
