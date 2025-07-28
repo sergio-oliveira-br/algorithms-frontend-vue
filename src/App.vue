@@ -25,7 +25,7 @@
 
           <li class="text-lg text-sky-200 mt-3">Linear Search</li>
           <li>
-            <router-link to="/" class="block px-4 py-2 rounded-lg text-sm font-medium
+            <router-link to="/linear-search/find-min-max" class="block px-4 py-2 rounded-lg text-sm font-medium
               hover:bg-gray-700 transition duration-200 ease-in-out">Find Min & Max
             </router-link>
           </li>
