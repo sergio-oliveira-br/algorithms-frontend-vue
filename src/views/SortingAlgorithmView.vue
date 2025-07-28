@@ -1,6 +1,6 @@
 <script setup>
   import {ref} from 'vue';
-  import {useApiFetch} from '../composables/useApiFetch.js';
+  import {useApiFetch} from '../composables/useApiFetch.ts';
   import SortPerformanceChart from "@/components/SortPerformanceChart.vue";
 
   // --- Logic for the Random Number Generator --
