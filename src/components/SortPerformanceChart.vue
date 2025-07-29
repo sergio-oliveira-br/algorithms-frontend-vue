@@ -1,84 +1,83 @@
-<script setup>
-import { defineProps, computed } from "vue";
-import { Bar } from 'vue-chartjs';
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-} from "chart.js";
+// src/components/SortPerformanceChart.vue
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+<script setup lang="ts">
 
-const props = defineProps({
-  chartData: {
-    type: Array,
-    required: true
-  }
-});
+  import { defineProps, computed } from "vue";
+  import { Bar } from 'vue-chartjs';
+  import {
+    Chart as ChartJS,
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+    TooltipItem
+  } from "chart.js";
+  import {SortResult} from "@/types";
 
-const dataForChart = computed(() => {
-  const labels = props.chartData.map(result => result.algorithmUsed);
-  const data = props.chartData.map(result => result.durationNanos);
+  ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
-  return {
-    labels: labels,
-    datasets: [
-      {
-        label: 'Elapsed Time (ms)',
-        backgroundColor: '#42A5F5',
-        data: data,
+  const props = defineProps<{
+    chartData: SortResult[];
+  }>();
+
+  const dataForChart = computed(() => {
+    const labels = props.chartData.map(result => result.algorithmUsed);
+    const data = props.chartData.map(result => result.durationNanos);
+
+    return {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Elapsed Time (ms)',
+          backgroundColor: '#42A5F5',
+          data: data,
+        },
+      ],
+    };
+  });
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugin: {
+      title: {
+        display: true,
+        text: 'Time Comparison of Sorting Algorithms',
+        font: {
+          size: 12
+        },
       },
-    ],
-  };
-});
+      tooltip: {
+        callbacks: {
+          label: function(context: TooltipItem<'bar'>) {
+            let label = context.dataset.label || '';
 
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugin: {
-    title: {
-      display: true,
-      text: 'Time Comparison of Sorting Algorithms',
-      font: {
-        size: 12
-      },
-    },
-    tooltip: {
-      callbacks: {
-        label: function(context) {
-          let label = context.dataset.label || '';
-
-          if(label) {
-            label += ': ';
+            if(label) {
+              label += ': ';
+            }
+            return label;
           }
-          if (context.parsed.y !== null) {
-            label += context.parsed.y.toFixed(2) + ' ms';
-          }
-          return label;
         }
       }
-    }
-  },
-  scales: {
-    x: {
-      title: {
-        display: true,
-        text: 'Algorithms',
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Algorithms',
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Time (ms)',
+        },
+        beginAtZero: true,
       },
     },
-    y: {
-      title: {
-        display: true,
-        text: 'Time (ms)',
-      },
-      beginAtZero: true,
-    },
-  },
-};
+  };
 </script>
 
 <template>
