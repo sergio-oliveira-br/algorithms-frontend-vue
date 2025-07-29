@@ -6,7 +6,7 @@ import { useApiFetch } from "@/composables/useApiFetch";
 export function useRandomNumberGenerator() {
 
     //Typing the composable internal refs
-    const numberOfNumbersToGenerate = ref<number>(50);
+    const numberOfNumbersToGenerate = ref<number>();
     const generatedNumbersArray = ref<number[]>([]);
     const generationErrorMessage = ref<string | null>(null);
 
