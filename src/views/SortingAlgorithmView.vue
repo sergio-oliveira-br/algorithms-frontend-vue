@@ -19,15 +19,6 @@
     generateNumbers,
   } = useRandomNumberGenerator();
 
-  // Instância do composable
-  // Renamed variables returned to avoid name conflicts in the component
-  const {
-    data: multiSortApiData,   // Renamed to be specific for sorting
-    loading: isSortingApiLoading, // Renamed for clarity and independence
-    errorMsg: sortApiError,       // Renamed for clarity and independence
-    fetchData: callSortAlgorithmApi,
-  } = useApiFetch();
-
   const handleGenerateNumbers = async () => {
 
     pageErrorMessage.value = null;
@@ -41,6 +32,15 @@
     }
   };
 
+
+  // Instância do composable
+  // Renamed variables returned to avoid name conflicts in the component
+  const {
+    data: multiSortApiData,   // Renamed to be specific for sorting
+    loading: isSortingApiLoading, // Renamed for clarity and independence
+    errorMsg: sortApiError,       // Renamed for clarity and independence
+    fetchData: callSortAlgorithmApi,
+  } = useApiFetch();
 
   // Function to be called by the clinck "Sort" button
   const sortAlgorithms = async () => {
