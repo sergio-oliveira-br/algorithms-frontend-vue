@@ -5,6 +5,7 @@
 
   // Refs related directly to the main ordering component
   const pageErrorMessage = ref<string | null>(null);
+  let minValue = ref<number | null>(null);
 
   // -- Number Generator Composable Instantiation --
   const {
@@ -17,7 +18,7 @@
 
   const handleGenerateNumbers = async () => {
 
-    pageErrorMessage.value = null;
+    pageErrorMessage.value = null; // Cleanup
 
     await generateNumbers(); // Calls the composable function
 
@@ -27,6 +28,54 @@
     }
   };
 
+  // --- Instância do composable (Linear Search)
+  // Renamed variables returned to avoid name conflicts in the component
+  const {
+    data: finderApiData,
+    loading: isFindingApiLoading,
+    errorMsg: findApiError,
+    fetchData: callFindAlgorithmApi,
+  } = useApiFetch<number | null>();
+
+  // Function to be called by the clinck "Find Min" button
+  const findMinValue = async () => {
+
+    // cleanup
+    pageErrorMessage.value = null;
+    minValue.value = null;
+
+    const arrayCopyForFinding = [...generatedNumbersArray.value];
+
+    // Validation before sending to backend
+    if(arrayCopyForFinding.length <= 2) {
+      pageErrorMessage.value = 'It is not possible to find the min value. ' +
+          '\nThey array must be grater than 2 numbers';
+      return;
+    }
+
+    // Build URL
+    const url = `http://localhost:8080/api/v1/find/min`
+
+    await callFindAlgorithmApi(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(arrayCopyForFinding),
+    });
+
+    if(findApiError.value) {
+      pageErrorMessage.value = findApiError.value;
+    }
+    else if(finderApiData.value !== null && typeof finderApiData.value === 'number') {
+      minValue.value = finderApiData.value;
+      pageErrorMessage.value = null;
+    }
+    else {
+      pageErrorMessage.value = 'Failed to find minimum value: unexpected API response.';
+      console.error('Unexpected find API data:', finderApiData.value);
+    }
+  };
 </script>
 
 <template>
