@@ -67,7 +67,7 @@
     if(findApiError.value) {
       pageErrorMessage.value = findApiError.value;
     }
-    else if(finderApiData.value !== null && typeof finderApiData.value === 'number') {
+    else if(finderApiData.value !== null) {
       minValue.value = finderApiData.value;
       pageErrorMessage.value = null;
     }
@@ -122,7 +122,7 @@
       <div v-if="minValue" class="p-4 bg-lime-50 rounded-lg border border-lime-200">
         <p>Min value is: {{minValue}}</p>
       </div>
-      
+
     </div>
   </div>
 </template>
