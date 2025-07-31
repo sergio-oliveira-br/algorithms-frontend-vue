@@ -100,13 +100,31 @@
                     ease-in-out">{{isGeneratedApiLoading ? 'Generating...' : 'Generate Numbers'}}
       </button>
 
-      <div v-if="generatedNumbersArray.length > 0" class="mt-4 p-4 bg-sky-50 rounded-lg border border-indigo-200">
+      <div v-if="generatedNumbersArray.length > 0" class="mt-2 p-4 bg-sky-50 rounded-lg border border-indigo-200">
         <p class="font-mono text-indigo-700 break-all text-sm">{{ generatedNumbersArray.join(', ') }}</p>
       </div>
+
+      <div v-if="pageErrorMessage" class="mt-2 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg" role="alert">
+        <p class="font-bold">Error:</p>
+        <p>{{ generationErrorMessage }}</p>
+      </div>
+
+
+      <button
+          @click="findMinValue"
+          class="w-full p-2 my-2
+          bg-slate-50
+            border border-gray-300 rounded-sm
+              text-neutral-500 font-bold
+                shadow-sm hover:shadow-lg
+                  ease-in-out">{{ isFindingApiLoading ? 'Finding Min...' : 'Find Min Value' }}
+      </button>
+      <div v-if="minValue" class="p-4 bg-lime-50 rounded-lg border border-lime-200">
+        <p>Min value is: {{minValue}}</p>
+      </div>
+      
     </div>
   </div>
-
-
 </template>
 
 <style scoped>
