@@ -57,7 +57,7 @@
     }
 
     // Build URL
-    const url = `http://localhost:8080/api/v1/find/min`
+    const url = `http://localhost:8080/api/v1/find/min-value`
 
     await callFindAlgorithmApi(url, {
       method: 'POST',
