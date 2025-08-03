@@ -6,6 +6,7 @@
   // Refs related directly to the main ordering component
   const pageErrorMessage = ref<string | null>(null);
   let minValue = ref<number | null>(null);
+  let maxValue = ref<number | null>(null);
 
   // -- Number Generator Composable Instantiation --
   const {
@@ -72,6 +73,39 @@
     }
     else if(finderApiData.value !== null) {
       minValue.value = finderApiData.value;
+      pageErrorMessage.value = null;
+    }
+    else {
+      pageErrorMessage.value = 'Failed to find minimum value: unexpected API response.';
+      console.error('Unexpected find API data:', finderApiData.value);
+    }
+  };
+
+  // Function to be called by the clinck "Find Max" button
+  const findMaxValue = async () => {
+
+    // cleanup
+    pageErrorMessage.value = null;
+    maxValue.value = null;
+
+    const arrayCopyForFinding = [...generatedNumbersArray.value];
+
+    // Build URL
+    const url = `http://localhost:8080/api/v1/find/max-value`
+
+    await callFindAlgorithmApi(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(arrayCopyForFinding),
+    });
+
+    if(findApiError.value) {
+      pageErrorMessage.value = findApiError.value;
+    }
+    else if(finderApiData.value !== null) {
+      maxValue.value = finderApiData.value;
       pageErrorMessage.value = null;
     }
     else {
