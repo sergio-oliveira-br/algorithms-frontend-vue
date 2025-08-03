@@ -147,18 +147,32 @@
       </div>
 
 
-      <button
-          @click="findMinValue"
-          class="w-full p-2 my-2
-          bg-slate-50
-            border border-gray-300 rounded-sm
-              text-neutral-500 font-bold
-                shadow-sm hover:shadow-lg
-                  ease-in-out">{{ isFindingApiLoading ? 'Finding Min...' : 'Find Min Value' }}
-      </button>
-      <div v-if="minValue" class="p-4 bg-lime-50 rounded-lg border border-lime-200">
-        <p>Min value is: {{minValue}}</p>
+      <div class="grid grid-cols-4 gap-5">
+        <button
+            @click="findMinValue"
+            class="p-2 my-2 col-span-2
+            bg-zinc-100
+              border border-gray-300 rounded-sm
+                text-neutral-500 font-bold
+                  shadow-sm hover:shadow-lg
+                    ease-in-out">{{ isFindingApiLoading ? 'Searching Min...' : 'Find Min Value' }}
+        </button>
+        <button
+            @click="findMaxValue"
+            class="p-2 my-2 col-span-2
+            bg-stone-100
+              border border-gray-300 rounded-sm
+                text-neutral-500 font-bold
+                  shadow-sm hover:shadow-lg">{{ isFindingApiLoading ? 'Searching Max...' : 'Find Max Value' }}
+        </button>
       </div>
+
+
+      <div v-if="minValue || maxValue" class="p-4 bg-lime-50 rounded-lg border border-lime-200">
+        <p v-if="minValue">Min value is: {{ minValue }}</p>
+        <p v-if="maxValue">Max value is: {{ maxValue }}</p>
+      </div>
+
 
     </div>
   </div>
