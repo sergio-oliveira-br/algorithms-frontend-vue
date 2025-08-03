@@ -18,7 +18,10 @@
 
   const handleGenerateNumbers = async () => {
 
-    pageErrorMessage.value = null; // Cleanup
+    // Cleanup
+    pageErrorMessage.value = null;
+    minValue.value = null;
+    maxValue.value = null;
 
     await generateNumbers(); // Calls the composable function
 
