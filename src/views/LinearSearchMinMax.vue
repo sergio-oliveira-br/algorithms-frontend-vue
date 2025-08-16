@@ -7,6 +7,8 @@
   const pageErrorMessage = ref<string | null>(null);
   let minValue = ref<number | null>(null);
   let maxValue = ref<number | null>(null);
+  let foudValue = ref<number | null>(null);
+  const strategyName = ref<string>('min');
 
   // -- Number Generator Composable Instantiation --
   const {
@@ -113,6 +115,49 @@
       console.error('Unexpected find API data:', finderApiData.value);
     }
   };
+
+
+
+
+  //Strategy Pattern
+  const findMinValueOrMax = async() => {
+
+    //cleanup
+    pageErrorMessage.value = null;
+    foudValue.value = null;
+
+    const arrayCopyForFinding = [...generatedNumbersArray.value];
+
+    // validation
+    if(arrayCopyForFinding.length <= 2) {
+      pageErrorMessage.value = 'It is not possible to find the min value. ' +
+          '\nThey array must be grater than 2 numbers';
+      return;
+    }
+
+    // business logic
+    const url = `http://localhost:8080/api/v1/find/${strategyName.value}`
+
+    await callFindAlgorithmApi(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([...(generatedNumbersArray.value ?? [])]),
+    });
+
+    // error handler
+    if(findApiError.value) {
+      pageErrorMessage.value = findApiError.value;
+    }
+    else if(finderApiData.value !== null) {
+      foudValue.value = finderApiData.value;
+      pageErrorMessage.value = null;
+    }
+    else {
+      pageErrorMessage.value = 'Failed to find any value: unexpected API response.';
+    }
+  };
 </script>
 
 <template>
@@ -168,13 +213,39 @@
       </div>
 
 
-      <div v-if="minValue || maxValue" class="p-4 bg-lime-50 rounded-lg border border-lime-200">
+      <div v-if="minValue || maxValue || foudValue" class="p-4 bg-lime-50 rounded-lg border border-lime-200">
         <p v-if="minValue">Min value is: {{ minValue }}</p>
         <p v-if="maxValue">Max value is: {{ maxValue }}</p>
+        <p v-if="foudValue">{{ foudValue }}</p>
       </div>
 
 
+      <div class="mt-4">
+        <label class="block text-gray-500 mb-2">Select a strategy:</label>
+        <div class="flex items-center space-x-4">
+
+          <div class="flex items-center">
+            <input type="radio" id="findMin" value="Min" v-model="strategyName" name="findStrategy" class="mr-2">
+            <label for="findMin">Find Minimum</label>
+          </div>
+
+          <div class="flex items-center">
+            <input type="radio" id="findMax" value="Max" v-model="strategyName" name="findStrategy" class="mr-2">
+            <label for="findMax">Find Maximum</label>
+          </div>
+
+        </div>
+      </div>
+
+      <button
+          @click="findMinValueOrMax"
+          :disabled="isFindingApiLoading || !generatedNumbersArray || generatedNumbersArray.length === 0"
+          class="...">
+        {{ isFindingApiLoading ? 'Finding...' : 'Find Value' }}
+      </button>
+
     </div>
+
   </div>
 </template>
 
