@@ -5,8 +5,6 @@
 
   // Refs related directly to the main ordering component
   const pageErrorMessage = ref<string | null>(null);
-  let minValue = ref<number | null>(null);
-  let maxValue = ref<number | null>(null);
   let foudValue = ref<number | null>(null);
   const strategyName = ref<string>('min');
 
@@ -23,8 +21,7 @@
 
     // Cleanup
     pageErrorMessage.value = null;
-    minValue.value = null;
-    maxValue.value = null;
+    foudValue.value = null;
 
     await generateNumbers(); // Calls the composable function
 
@@ -42,80 +39,6 @@
     errorMsg: findApiError,
     fetchData: callFindAlgorithmApi,
   } = useApiFetch<number | null>();
-
-  // Function to be called by the clinck "Find Min" button
-  const findMinValue = async () => {
-
-    // cleanup
-    pageErrorMessage.value = null;
-    minValue.value = null;
-
-    const arrayCopyForFinding = [...generatedNumbersArray.value];
-
-    // Validation before sending to backend
-    if(arrayCopyForFinding.length <= 2) {
-      pageErrorMessage.value = 'It is not possible to find the min value. ' +
-          '\nThey array must be grater than 2 numbers';
-      return;
-    }
-
-    // Build URL
-    const url = `http://localhost:8080/api/v1/find/min-value`
-
-    await callFindAlgorithmApi(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(arrayCopyForFinding),
-    });
-
-    if(findApiError.value) {
-      pageErrorMessage.value = findApiError.value;
-    }
-    else if(finderApiData.value !== null) {
-      minValue.value = finderApiData.value;
-      pageErrorMessage.value = null;
-    }
-    else {
-      pageErrorMessage.value = 'Failed to find minimum value: unexpected API response.';
-      console.error('Unexpected find API data:', finderApiData.value);
-    }
-  };
-
-  // Function to be called by the clinck "Find Max" button
-  const findMaxValue = async () => {
-
-    // cleanup
-    pageErrorMessage.value = null;
-    maxValue.value = null;
-
-    const arrayCopyForFinding = [...generatedNumbersArray.value];
-
-    // Build URL
-    const url = `http://localhost:8080/api/v1/find/max-value`
-
-    await callFindAlgorithmApi(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(arrayCopyForFinding),
-    });
-
-    if(findApiError.value) {
-      pageErrorMessage.value = findApiError.value;
-    }
-    else if(finderApiData.value !== null) {
-      maxValue.value = finderApiData.value;
-      pageErrorMessage.value = null;
-    }
-    else {
-      pageErrorMessage.value = 'Failed to find minimum value: unexpected API response.';
-      console.error('Unexpected find API data:', finderApiData.value);
-    }
-  };
-
 
 
 
@@ -191,31 +114,7 @@
         <p>{{ generationErrorMessage }}</p>
       </div>
 
-
-      <div class="grid grid-cols-4 gap-5">
-        <button
-            @click="findMinValue"
-            class="p-2 my-2 col-span-2
-            bg-zinc-100
-              border border-gray-300 rounded-sm
-                text-neutral-500 font-bold
-                  shadow-sm hover:shadow-lg
-                    ease-in-out">{{ isFindingApiLoading ? 'Searching Min...' : 'Find Min Value' }}
-        </button>
-        <button
-            @click="findMaxValue"
-            class="p-2 my-2 col-span-2
-            bg-stone-100
-              border border-gray-300 rounded-sm
-                text-neutral-500 font-bold
-                  shadow-sm hover:shadow-lg">{{ isFindingApiLoading ? 'Searching Max...' : 'Find Max Value' }}
-        </button>
-      </div>
-
-
-      <div v-if="minValue || maxValue || foudValue" class="p-4 bg-lime-50 rounded-lg border border-lime-200">
-        <p v-if="minValue">Min value is: {{ minValue }}</p>
-        <p v-if="maxValue">Max value is: {{ maxValue }}</p>
+      <div v-if="foudValue" class="p-4 bg-lime-50 rounded-lg border border-lime-200">
         <p v-if="foudValue">{{ foudValue }}</p>
       </div>
 
