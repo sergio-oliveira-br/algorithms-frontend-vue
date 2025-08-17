@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { ref, watch } from 'vue';
   import { useApiFetch } from "@/composables/useApiFetch";
   import { useRandomNumberGenerator } from "@/composables/useRandomNumberGenerator";
 
@@ -31,6 +31,9 @@
     }
   };
 
+
+
+
   // --- Instância do composable (Linear Search)
   // Renamed variables returned to avoid name conflicts in the component
   const {
@@ -40,27 +43,23 @@
     fetchData: callFindAlgorithmApi,
   } = useApiFetch<number | null>();
 
-
-
-  //Strategy Pattern
-  const findMinValueOrMax = async() => {
-
-    //cleanup
-    pageErrorMessage.value = null;
-    foundValue.value = null;
-
-    const arrayCopyForFinding = [...generatedNumbersArray.value];
+  watch(strategyName, async (newStrategy, oldStrategy) => {
 
     // validation
-    if(arrayCopyForFinding.length <= 2) {
+    if(!generatedNumbersArray.value || generatedNumbersArray.value.length < 1) {
       pageErrorMessage.value = 'It is not possible to find the min value. ' +
           '\nThey array must be grater than 2 numbers';
       return;
     }
 
-    // business logic
-    const url = `http://localhost:8080/api/v1/find/${strategyName.value}`
+    // cleanup
+    pageErrorMessage.value = null;
+    foundValue.value = null;
 
+    // build the URL
+    const url = `http://localhost:8080/api/v1/find/${newStrategy}`
+
+    //make the call
     await callFindAlgorithmApi(url, {
       method: 'POST',
       headers: {
@@ -69,18 +68,18 @@
       body: JSON.stringify([...(generatedNumbersArray.value ?? [])]),
     });
 
-    // error handler
+    // call back is error or success
     if(findApiError.value) {
       pageErrorMessage.value = findApiError.value;
     }
     else if(finderApiData.value !== null) {
       foundValue.value = finderApiData.value;
-      pageErrorMessage.value = null;
     }
     else {
-      pageErrorMessage.value = 'Failed to find any value: unexpected API response.';
+      pageErrorMessage.value = 'Failed to find value: unexpected API response.';
+      console.error('Unexpected find API data:', finderApiData.value);
     }
-  };
+  });
 </script>
 
 <template>
@@ -116,11 +115,10 @@
 
       <div v-if="foundValue" class="mt-3 p-4 bg-lime-50 rounded-lg border border-lime-200">
         <p class="font-bold">
-          {{ strategyName === 'min' ? 'Minimum Value Found:' : 'Maximum Value Found:' }}
+          {{ strategyName === 'Min' ? 'Minimum Value Found:' : 'Maximum Value Found:' }}
         </p>
         <p class="mt-2 text-lg font-mono">{{ foundValue }}</p>
       </div>
-
 
       <div class="mt-4 pt-2 border-t border-stone-200">
         <label class="block text-gray-500 mb-2">Select a strategy:</label>
@@ -135,23 +133,9 @@
             <input type="radio" id="findMax" value="Max" v-model="strategyName" name="findStrategy" class="mr-2">
             <label class="block text-gray-500 font-bold mb-2 " for="findMax">Find Maximum</label>
           </div>
-
         </div>
       </div>
-
-      <button
-          @click="findMinValueOrMax"
-          :disabled="isFindingApiLoading || !generatedNumbersArray || generatedNumbersArray.length === 0"
-          class="w-full p-2 my-2
-           bg-stone-200
-              border border-gray-300 rounded-sm
-                text-neutral-500 font-bold
-                  shadow-sm hover:shadow-lg">
-        {{ isFindingApiLoading ? 'Finding...' : 'Find Value' }}
-      </button>
-
     </div>
-
   </div>
 </template>
 
