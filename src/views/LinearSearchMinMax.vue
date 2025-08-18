@@ -7,6 +7,8 @@
   const pageErrorMessage = ref<string | null>(null);
   let foundValue = ref<number | null>(null);
   const strategyName = ref<string>('min');
+  const foundValue = ref<number | null>(null);
+  const strategyName = ref<'Min' | 'Max'>('Min');
 
   // -- Number Generator Composable Instantiation --
   const {
