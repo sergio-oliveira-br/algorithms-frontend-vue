@@ -4,6 +4,7 @@ import { createRouter, createWebHistory, RouteRecordRaw} from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import SortingAlgorithmView from "../views/SortingAlgorithmView.vue";
 import LinearSearchMinMax from "@/views/LinearSearchMinMax.vue";
+import CheckDuplicates from "@/views/CheckDuplicates.vue";
 
 
 const routes: RouteRecordRaw[] = [
@@ -22,6 +23,11 @@ const routes: RouteRecordRaw[] = [
         name: 'linear-search-min-max',
         component: LinearSearchMinMax
     },
+    {
+        path: '/check-duplicates',
+        name: 'check-duplicates',
+        component: CheckDuplicates
+    }
 ];
 
 const router = createRouter({
