@@ -30,7 +30,7 @@
             </router-link>
           </li>
           <li>
-            <router-link to="/" class="block px-4 py-2 rounded-lg text-sm font-medium
+            <router-link to="/check-duplicates" class="block px-4 py-2 rounded-lg text-sm font-medium
               hover:bg-gray-700 transition duration-200 ease-in-out">Check Duplicates
             </router-link>
           </li>
