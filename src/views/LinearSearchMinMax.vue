@@ -43,7 +43,7 @@
     fetchData: callFindAlgorithmApi,
   } = useApiFetch<number | null>();
 
-  watch(strategyName, async (newStrategy, oldStrategy) => {
+  watch(strategyName, async (newStrategy) => {
 
     // validation
     if(!generatedNumbersArray.value || generatedNumbersArray.value.length < 1) {
