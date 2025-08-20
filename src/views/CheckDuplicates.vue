@@ -5,6 +5,7 @@
 
   // Refs related directly to the main ordering component
   const pageErrorMessage = ref<string | null>(null);
+  const isDuplicate = ref<boolean | null>(null);
 
   // -- Number Generator Composable Instantiation --
   const {
@@ -25,6 +26,55 @@
       pageErrorMessage.value = generationErrorMessage.value;
     }
   };
+
+
+  // --- Composable Instance (Linear Search)
+  // Renamed variables returned to avoid name conflicts in the component
+  const {
+    data: checkDuplicatesApiData,
+    loading: isCheckDuplicatesApiLoading,
+    errorMsg: checkDuplicatesApiError,
+    fetchData: callDuplicatesApiData,
+  } = useApiFetch<boolean | null>();
+
+  const checker = async() => {
+
+    // validation
+    if (!generatedNumbersArray.value || generatedNumbersArray.value.length < 1) {
+      pageErrorMessage.value = 'Please generate numbers first before sorting.';
+      return;
+    }
+
+    // cleanup
+    pageErrorMessage.value = null;
+    isDuplicate.value = null;
+
+    // build the url
+    const url = `http://localhost:8080/api/v1/check/duplicates`
+
+    // make the call
+    await callDuplicatesApiData(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([...(generatedNumbersArray.value ?? [])]),
+    });
+
+    // call back
+    if (checkDuplicatesApiError.value) {
+      pageErrorMessage.value = checkDuplicatesApiError.value;
+    }
+    else if (checkDuplicatesApiData.value !== null) {
+      isDuplicate.value = checkDuplicatesApiData.value;
+      pageErrorMessage.value = null;
+    }
+    else {
+      pageErrorMessage.value = 'Failed to find value: unexpected API response.';
+      console.error('Unexpected error occurred.', pageErrorMessage.value);
+    }
+  }
+
 </script>
 
 <template>
