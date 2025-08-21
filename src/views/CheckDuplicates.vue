@@ -3,9 +3,17 @@
   import { useApiFetch } from "@/composables/useApiFetch";
   import { useRandomNumberGenerator } from "@/composables/useRandomNumberGenerator";
 
+  // --- DTO for the API response
+  interface DuplicatesResult {
+    hasDuplicate: boolean;
+    duplicateCount: number;
+    duplicateNumbers: number[];
+  }
+
   // Refs related directly to the main ordering component
   const pageErrorMessage = ref<string | null>(null);
-  const isDuplicate = ref<boolean | null>(null);
+  const result = ref<DuplicatesResult | null>(null);
+
 
   // -- Number Generator Composable Instantiation --
   const {
@@ -19,6 +27,7 @@
   const handleGenerateNumbers = async () => {
 
     pageErrorMessage.value = null;
+    result.value = null;
 
     await generateNumbers();
 
@@ -35,7 +44,7 @@
     loading: isCheckDuplicatesApiLoading,
     errorMsg: checkDuplicatesApiError,
     fetchData: callDuplicatesApiData,
-  } = useApiFetch<boolean | null>();
+  } = useApiFetch<DuplicatesResult | null>();
 
   const checker = async() => {
 
@@ -47,7 +56,7 @@
 
     // cleanup
     pageErrorMessage.value = null;
-    isDuplicate.value = null;
+    result.value = null;
 
     // build the url
     const url = `http://localhost:8080/api/v1/check/duplicates`
@@ -66,7 +75,7 @@
       pageErrorMessage.value = checkDuplicatesApiError.value;
     }
     else if (checkDuplicatesApiData.value !== null) {
-      isDuplicate.value = checkDuplicatesApiData.value;
+      result.value = checkDuplicatesApiData.value;
       pageErrorMessage.value = null;
     }
     else {
