@@ -32,9 +32,7 @@
   };
 
 
-
-
-  // --- Instância do composable (Linear Search)
+  // --- Composable instance (Linear Search)
   // Renamed variables returned to avoid name conflicts in the component
   const {
     data: finderApiData,
