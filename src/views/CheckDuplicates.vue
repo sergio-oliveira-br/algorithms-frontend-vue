@@ -111,6 +111,25 @@
         <p>{{ generationErrorMessage }}</p>
       </div>
 
+      <button v-if="generatedNumbersArray.length > 0"
+          @click="checker" class="w-full p-2 my-2
+            bg-neutral-50
+              border border-neutral-300 rounded-sm
+                text-neutral-500 font-bold
+                  shadow-sm hover:shadow-lg
+                    ease-in-out">Verify
+
+      </button>
+
+      <!-- Output - Success -->
+      <div v-if="generatedNumbersArray.length > 0 && isDuplicate === true || isDuplicate === false"
+          class="mt-2 p-4 bg-slate-50 rounded-lg border border-gray-200">
+
+        <p v-if="isDuplicate === true || isDuplicate === false"
+            class="font-mono text-indigo-700 break-all text-sm">
+          <span class="text-stone-700">Is there any duplicate number: </span>{{ isDuplicate }}</p>
+      </div>
+
     </div>
   </div>
 </template>
