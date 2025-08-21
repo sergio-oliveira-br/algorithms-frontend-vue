@@ -6,7 +6,7 @@
   // Refs related directly to the main ordering component
   const pageErrorMessage = ref<string | null>(null);
   const foundValue = ref<number | null>(null);
-  const strategyName = ref<'Min' | 'Max'>('Min');
+  const strategyName = ref<'Min' | 'Max' | null>(null);
 
   // -- Number Generator Composable Instantiation --
   const {
