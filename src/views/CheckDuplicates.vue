@@ -131,12 +131,21 @@
       </button>
 
       <!-- Output - Success -->
-      <div v-if="generatedNumbersArray.length > 0 && isDuplicate === true || isDuplicate === false"
+      <div v-if="generatedNumbersArray.length > 0 && result?.hasDuplicate === true || result?.hasDuplicate === false"
           class="mt-2 p-4 bg-slate-50 rounded-lg border border-gray-200">
 
-        <p v-if="isDuplicate === true || isDuplicate === false"
-            class="font-mono text-indigo-700 break-all text-sm">
-          <span class="text-stone-700">Is there any duplicate number: </span>{{ isDuplicate }}</p>
+        <p class="font-bold mb-2">
+          {{ result.hasDuplicate ? 'Duplicates Found!' : 'No Duplicates Found.' }}
+        </p>
+
+        <div v-if="result.hasDuplicate">
+          <p>
+            Total Duplicates: <span class="font-bold">{{ result.duplicateCount }}</span>
+          </p>
+          <p class="mt-1">
+            Duplicated Numbers: <span class="font-mono">{{ result.duplicateNumbers.join(', ') }}</span>
+          </p>
+        </div>
       </div>
 
     </div>
