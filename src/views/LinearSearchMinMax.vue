@@ -120,21 +120,24 @@
         <p class="mt-2 text-lg font-mono">{{ foundValue }}</p>
       </div>
 
-      <div class="mt-4 pt-2 border-t border-stone-200">
-        <label class="block text-gray-500 mb-2">Select a strategy:</label>
-        <div class="flex items-center space-x-4">
+      <div v-if="generatedNumbersArray.length > 0">
+        <div class="mt-4 pt-2 border-t border-stone-200">
+          <label class="block text-gray-500 mb-2">Select a strategy:</label>
+          <div class="flex items-center space-x-4">
 
-          <div class="flex items-center">
-            <input type="radio" id="findMin" value="Min" v-model="strategyName" name="findStrategy" class="mr-2">
-            <label class="block text-gray-500 font-bold mb-2" for="findMin">Find Minimum</label>
-          </div>
+            <div class="flex items-center">
+              <input type="radio" id="findMin" value="Min" v-model="strategyName" name="findStrategy" class="mr-2">
+              <label class="block text-gray-500 font-bold mb-2" for="findMin">Find Minimum</label>
+            </div>
 
-          <div class="flex items-center">
-            <input type="radio" id="findMax" value="Max" v-model="strategyName" name="findStrategy" class="mr-2">
-            <label class="block text-gray-500 font-bold mb-2 " for="findMax">Find Maximum</label>
+            <div class="flex items-center">
+              <input type="radio" id="findMax" value="Max" v-model="strategyName" name="findStrategy" class="mr-2">
+              <label class="block text-gray-500 font-bold mb-2 " for="findMax">Find Maximum</label>
+            </div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
