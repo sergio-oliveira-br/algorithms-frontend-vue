@@ -1,12 +1,20 @@
 <script setup lang="ts">
   import { ref, watch } from 'vue';
-  import { useApiFetch } from "@/composables/useApiFetch";
   import { useRandomNumberGenerator } from "@/composables/useRandomNumberGenerator";
+  import { useFindMinOrMax } from "@/composables/useFindMinOrMax";
 
   // Refs related directly to the main ordering component
   const pageErrorMessage = ref<string | null>(null);
-  const foundValue = ref<number | null>(null);
   const strategyName = ref<'Min' | 'Max' | null>(null);
+
+  // --- Find Min and Max Composable Instantiation
+  const {
+    foundValue,
+    searchErrorMessage,
+    isSearchApiLoading,
+    findValue,
+  } = useFindMinOrMax();
+
 
   // -- Number Generator Composable Instantiation --
   const {
@@ -17,67 +25,43 @@
     generateNumbers,
   } = useRandomNumberGenerator();
 
+
   const handleGenerateNumbers = async () => {
 
-    // Cleanup
+    // cleanup
     pageErrorMessage.value = null;
-    foundValue.value = null;
 
     await generateNumbers(); // Calls the composable function
 
-    // Check the composable error
     if (generationErrorMessage.value) {
       pageErrorMessage.value = generationErrorMessage.value;
+    }
+    // if a strategy is already selected, the search starts automatically
+    else if (strategyName.value) {
+      await findValue(generatedNumbersArray.value, strategyName.value);
     }
   };
 
 
-  // --- Composable instance (Linear Search)
-  // Renamed variables returned to avoid name conflicts in the component
-  const {
-    data: finderApiData,
-    loading: isFindingApiLoading,
-    errorMsg: findApiError,
-    fetchData: callFindAlgorithmApi,
-  } = useApiFetch<number | null>();
-
-  watch(strategyName, async (newStrategy) => {
-
-    // validation
-    if(!generatedNumbersArray.value || generatedNumbersArray.value.length < 1) {
-      pageErrorMessage.value = 'It is not possible to find the min value. ' +
-          '\nThey array must be grater than 2 numbers';
-      return;
-    }
+  // Calls the main function of the composable when strategy changes
+  watch(strategyName, (newStrategy) => {
 
     // cleanup
     pageErrorMessage.value = null;
-    foundValue.value = null;
 
-    // build the URL
-    const url = `http://localhost:8080/api/v1/find/${newStrategy}`
-
-    //make the call
-    await callFindAlgorithmApi(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify([...(generatedNumbersArray.value ?? [])]),
-    });
-
-    // call back is error or success
-    if(findApiError.value) {
-      pageErrorMessage.value = findApiError.value;
+    if (searchErrorMessage.value){
+      pageErrorMessage.value = searchErrorMessage.value;
     }
-    else if(finderApiData.value !== null) {
-      foundValue.value = finderApiData.value;
-    }
-    else {
-      pageErrorMessage.value = 'Failed to find value: unexpected API response.';
-      console.error('Unexpected find API data:', finderApiData.value);
+    else if (newStrategy && generatedNumbersArray.value) {
+      findValue(generatedNumbersArray.value, newStrategy);
     }
   });
+
+  // Observa o erro do composable de busca e o exibe na página
+  watch(searchErrorMessage, (newError) => {
+    pageErrorMessage.value = newError;
+  });
+
 </script>
 
 <template>
