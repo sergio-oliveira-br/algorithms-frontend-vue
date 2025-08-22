@@ -36,7 +36,7 @@ export function useRandomNumberGenerator() {
             return;
         }
 
-        const url = `http://localhost:8080/api/v1/sort/generator?qtyOfNumbersToGenerate=${num}`;
+        const url = `http://localhost:8080/api/v1/generator?qtyOfNumbersToGenerate=${num}`;
 
         await callGenerateApi(url, {method: 'POST'});
 
