@@ -1,19 +1,10 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import { useApiFetch } from "@/composables/useApiFetch";
+  import { ref, watch } from 'vue';
+  import { useFetchDuplicatesResult } from "@/composables/useCheckDuplicates";
   import { useRandomNumberGenerator } from "@/composables/useRandomNumberGenerator";
-
-  // --- DTO for the API response
-  interface DuplicatesResult {
-    hasDuplicate: boolean;
-    duplicateCount: number;
-    duplicateNumbers: number[];
-  }
 
   // Refs related directly to the main ordering component
   const pageErrorMessage = ref<string | null>(null);
-  const result = ref<DuplicatesResult | null>(null);
-
 
   // -- Number Generator Composable Instantiation --
   const {
@@ -24,10 +15,18 @@
     generateNumbers,
   } = useRandomNumberGenerator();
 
+
+  // Instantiation of duplicate check composable
+  const {
+    checkDuplicateErrorMessage,
+    duplicatesResult,
+    isCheckDuplicatesApiLoading,
+    checker,
+  } = useFetchDuplicatesResult();
+
   const handleGenerateNumbers = async () => {
 
     pageErrorMessage.value = null;
-    result.value = null;
 
     await generateNumbers();
 
@@ -37,57 +36,26 @@
   };
 
 
-  // --- Composable Instance (Linear Search)
-  // Renamed variables returned to avoid name conflicts in the component
-  const {
-    data: checkDuplicatesApiData,
-    loading: isCheckDuplicatesApiLoading,
-    errorMsg: checkDuplicatesApiError,
-    fetchData: callDuplicatesApiData,
-  } = useApiFetch<DuplicatesResult | null>();
+  // -- CHECK DUPLICATES Composable Instantiation --
+  const handleCheckDuplicates = () => {
 
-  const checker = async() => {
-
-    // validation
-    if (!generatedNumbersArray.value || generatedNumbersArray.value.length < 1) {
-      pageErrorMessage.value = 'Please generate numbers first before sorting.';
-      return;
+    if (checkDuplicateErrorMessage.value) {
+      pageErrorMessage.value = checkDuplicateErrorMessage.value;
     }
-
-    // cleanup
-    pageErrorMessage.value = null;
-    result.value = null;
-
-    // build the url
-    const url = `http://localhost:8080/api/v1/check/duplicates`
-
-    // make the call
-    await callDuplicatesApiData(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify([...(generatedNumbersArray.value ?? [])]),
-    });
-
-    // call back
-    if (checkDuplicatesApiError.value) {
-      pageErrorMessage.value = checkDuplicatesApiError.value;
-    }
-    else if (checkDuplicatesApiData.value !== null) {
-      result.value = checkDuplicatesApiData.value;
-      pageErrorMessage.value = null;
-    }
-    else {
-      pageErrorMessage.value = 'Failed to find value: unexpected API response.';
-      console.error('Unexpected error occurred.', pageErrorMessage.value);
+    else if (generatedNumbersArray.value) {
+      checker(generatedNumbersArray.value);
     }
   }
+
+  // Monitora o erro do composable e o exibe no componente
+  watch(checkDuplicateErrorMessage, (newError) => {
+    pageErrorMessage.value = newError;
+  });
 
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center p-8 bg-white rounded-lg shadow-lg">
+  <div class="flex flex-col items-center justify-center p-8 bg-white rounded-lg shadow-lg max-w-lg">
     <h1 class="font-bold text-3xl mb-3">Check Duplicates</h1>
     <h3 class="text-2xl text-gray-800 mb-2">Generate and identify duplicate values.</h3>
 
@@ -121,7 +89,7 @@
       </div>
 
       <button v-if="generatedNumbersArray.length > 0"
-          @click="checker" class="w-full p-2 my-2
+          @click="handleCheckDuplicates" class="w-full p-2 my-2
             bg-neutral-50
               border border-neutral-300 rounded-sm
                 text-neutral-500 font-bold
@@ -131,19 +99,19 @@
       </button>
 
       <!-- Output - Success -->
-      <div v-if="generatedNumbersArray.length > 0 && result?.hasDuplicate === true || result?.hasDuplicate === false"
+      <div v-if="duplicatesResult"
           class="mt-2 p-4 bg-slate-50 rounded-lg border border-gray-200">
 
         <p class="font-bold mb-2">
-          {{ result.hasDuplicate ? 'Duplicates Found!' : 'No Duplicates Found.' }}
+          {{ duplicatesResult.hasDuplicate ? 'Duplicates Found!' : 'No Duplicates Found.' }}
         </p>
 
-        <div v-if="result.hasDuplicate">
+        <div v-if="duplicatesResult.hasDuplicate ">
           <p>
-            Total Duplicates: <span class="font-bold">{{ result.duplicateCount }}</span>
+            Total Duplicates: <span class="font-bold">{{ duplicatesResult.duplicateCount }}</span>
           </p>
           <p class="mt-1">
-            Duplicated Numbers: <span class="font-mono">{{ result.duplicateNumbers.join(', ') }}</span>
+            Duplicated Numbers: <span class="font-mono">{{ duplicatesResult.duplicateNumbers.join(', ') }}</span>
           </p>
         </div>
       </div>
