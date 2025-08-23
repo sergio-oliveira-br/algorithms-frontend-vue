@@ -31,7 +31,7 @@
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center p-8 bg-white rounded-lg shadow-lg max-w-full">
+  <div class="flex flex-col items-center justify-center p-8 bg-white rounded-lg shadow-lg max-w-200">
     <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome to the Algorithm Explorer!</h1>
     <p class="text-lg text-gray-600">Please select an algorithm from the side menu to start or have a look below.</p>
 
