@@ -1,6 +1,6 @@
 // src/composables/useFindMinOrMax.ts
 
-import {ref, watch} from 'vue';
+import { ref } from 'vue';
 import { useApiFetch } from "@/composables/useApiFetch";
 
 // Typing the API response
