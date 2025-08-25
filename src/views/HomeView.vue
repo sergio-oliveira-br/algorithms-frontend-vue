@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ref } from 'vue';
-  import { useApiFetch } from "@/composables/useApiFetch";
   import { useRandomNumberGenerator } from "@/composables/useRandomNumberGenerator";
+  import { useFetchDuplicatesResult } from "@/composables/useCheckDuplicates";
 
   // Refs related directly to the main ordering component
   const pageErrorMessage = ref<string | null>(null);
@@ -16,8 +16,21 @@
     generateNumbers,
   } = useRandomNumberGenerator();
 
+
+  // CHECK FOR DUPLICATES
+  // Instantiation of duplicate check composable
+  const {
+    checkDuplicateErrorMessage,
+    duplicatesResult,
+    isCheckDuplicatesApiLoading,
+    checker
+  } = useFetchDuplicatesResult();
+
+
+  // GENERETE RANDOM NUMBERS
   const handleGenerateNumbers = async () => {
 
+    duplicatesResult.value = null;
     pageErrorMessage.value = null;
 
     await generateNumbers();
@@ -26,6 +39,18 @@
       pageErrorMessage.value = generationErrorMessage.value;
     }
   };
+  
+
+  // CHECK FOR DUPLICATES
+  const handleCheckDuplicateResult = async () => {
+
+    if (checkDuplicateErrorMessage.value) {
+      pageErrorMessage.value = checkDuplicateErrorMessage.value;
+    }
+    else if (generatedNumbersArray.value) {
+      await checker(generatedNumbersArray.value);
+    }
+  }
 
 
 </script>
@@ -59,6 +84,35 @@
         <p>{{ generationErrorMessage }}</p>
       </div>
 
+
+      <!-- CHECK FOR DUPLICATES -->
+      <button
+          @click="handleCheckDuplicateResult"
+          class="w-full p-2 my-2
+            bg-slate-50
+              border border-gray-300 rounded-sm
+                text-neutral-500 font-bold
+                  shadow-sm hover:shadow-lg
+                    ease-in-out">{{isCheckDuplicatesApiLoading ? 'Loading...' : 'Verify Duplicates'}}
+      </button>
+
+      <!-- CHECK FOR DUPLICATES: Output -->
+      <div v-if="duplicatesResult"
+           class="mt-2 p-4 bg-slate-50 rounded-lg border border-gray-200">
+
+        <p class="font-bold mb-2">
+          {{ duplicatesResult.hasDuplicate ? 'Duplicates Found!' : 'No Duplicates Found.' }}
+        </p>
+
+        <div v-if="duplicatesResult.hasDuplicate ">
+          <p>
+            Total Duplicates: <span class="font-bold">{{ duplicatesResult.duplicateCount }}</span>
+          </p>
+          <p class="mt-1">
+            Duplicated Numbers: <span class="font-mono">{{ duplicatesResult.duplicateNumbers.join(', ') }}</span>
+          </p>
+        </div>
+      </div>
   </div>
 </template>
 
