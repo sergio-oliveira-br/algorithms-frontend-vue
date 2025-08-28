@@ -1,10 +1,12 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import {ref, watch } from 'vue';
   import { useRandomNumberGenerator } from "@/composables/useRandomNumberGenerator";
   import { useFetchDuplicatesResult } from "@/composables/useCheckDuplicates";
+  import { useFindMinOrMax } from "@/composables/useFindMinOrMax";
 
   // Refs related directly to the main ordering component
   const pageErrorMessage = ref<string | null>(null);
+  const strategyName = ref<'Min' | 'Max' | 'checkForDuplicates' | null>(null);
 
   // GENERETE RANDOM NUMBERS
   // -- Number Generator Composable Instantiation --
@@ -27,6 +29,16 @@
   } = useFetchDuplicatesResult();
 
 
+  // FIND MIN & MAX
+  // -- Composable Instantiation
+  const {
+    foundValue,
+    searchErrorMessage,
+    isSearchApiLoading,
+    findValue,
+  } = useFindMinOrMax();
+
+
   // GENERETE RANDOM NUMBERS
   const handleGenerateNumbers = async () => {
 
@@ -39,7 +51,7 @@
       pageErrorMessage.value = generationErrorMessage.value;
     }
   };
-  
+
 
   // CHECK FOR DUPLICATES
   const handleCheckDuplicateResult = async () => {
@@ -51,6 +63,26 @@
       await checker(generatedNumbersArray.value);
     }
   }
+
+  // FIND MIN & MAX
+  // Calls the main function of the composable when strategy changes
+  watch(strategyName, (newStrategyName) => {
+
+    //cleanup
+    pageErrorMessage.value = null;
+
+    if (searchErrorMessage.value) {
+      pageErrorMessage.value = searchErrorMessage.value;
+    }
+    else if (newStrategyName === 'Min' || newStrategyName === 'Max' && generatedNumbersArray.value) {
+      duplicatesResult.value = null; //cleanup to change the subject
+      findValue(generatedNumbersArray.value, newStrategyName);
+    }
+    else if (strategyName.value === 'checkForDuplicates') {
+      foundValue.value = null; //cleanup to change the subject
+      handleCheckDuplicateResult();
+    }
+  });
 
 
 </script>
@@ -84,21 +116,70 @@
         <p>{{ generationErrorMessage }}</p>
       </div>
 
+      
 
-      <!-- CHECK FOR DUPLICATES -->
-      <button
-          @click="handleCheckDuplicateResult"
-          class="w-full p-2 my-2
-            bg-slate-50
-              border border-gray-300 rounded-sm
-                text-neutral-500 font-bold
-                  shadow-sm hover:shadow-lg
-                    ease-in-out">{{isCheckDuplicatesApiLoading ? 'Loading...' : 'Verify Duplicates'}}
-      </button>
+      <!-- SORTER -->
+      <p class="mt-4 pt-2 border-t border-stone-200 text-lg text-gray-600 text-center">Sorter</p>
+
+      <div class="flex items-center space-x-10">
+        <div class="flex items-center">
+          <input type="radio" name="" class="mr-2">
+          <label class="block text-gray-500 font-bold mb-2" for="">Bubble Sort</label>
+        </div>
+
+        <div class="flex items-center">
+          <input type="radio" name="" class="mr-2">
+          <label class="block text-gray-500 font-bold mb-2 " for="">Insertion</label>
+        </div>
+
+        <div class="flex items-center">
+          <input type="radio" class="mr-2">
+          <label class="block text-gray-500 font-bold mb-2" for="">Selection</label>
+        </div>
+
+        <div class="flex items-center">
+          <input type="radio" class="mr-2">
+          <label class="block text-gray-500 font-bold mb-2" for="">Tim Sort</label>
+        </div>
+      </div>
+
+      <!-- OUTPUT: RANDOM NUMBERS -->
+      <div class="mt-2 p-4 bg-sky-50 rounded-lg border border-indigo-200">
+        <p>exemplo de output</p>
+      </div>
+
+
+
+      <!-- LINEAR SEARCH -->
+      <p class="mt-4 pt-2 border-t border-stone-200 text-lg text-gray-600 text-center">Linear Search</p>
+
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center">
+          <input type="radio" id="findMin" value="Min" name="findStrategy" v-model="strategyName" class="mr-2">
+          <label class="block text-gray-500 font-bold mb-2" for="findMin">Find Minimum</label>
+        </div>
+
+        <div class="flex items-center">
+          <input type="radio" id="findMax" value="Max" name="findStrategy" v-model="strategyName" class="mr-2">
+          <label class="block text-gray-500 font-bold mb-2" for="findMax">Find Maximum</label>
+        </div>
+
+        <div class="flex items-center">
+          <input type="radio" value="checkForDuplicates" v-model="strategyName" class="mr-2">
+          <label class="block text-gray-500 font-bold mb-2" for="findMax">Check for Duplicates</label>
+        </div>
+      </div>
+
+      <!-- OUTPUT: FIND MIN & MAX -->
+      <div v-if="foundValue" class="mt-3 p-4 bg-lime-50 rounded-lg border border-lime-200">
+        <p class="font-bold">
+          {{ strategyName === 'Min' ? 'Minimum Value Found:' : 'Maximum Value Found:' }}
+        </p>
+        <p class="mt-2 text-lg font-mono">{{ foundValue }}</p>
+      </div>
 
       <!-- CHECK FOR DUPLICATES: Output -->
-      <div v-if="duplicatesResult"
-           class="mt-2 p-4 bg-slate-50 rounded-lg border border-gray-200">
+      <div v-if="duplicatesResult" class="mt-2 p-4 bg-slate-50 rounded-lg border border-gray-200">
 
         <p class="font-bold mb-2">
           {{ duplicatesResult.hasDuplicate ? 'Duplicates Found!' : 'No Duplicates Found.' }}
@@ -113,6 +194,10 @@
           </p>
         </div>
       </div>
+
+
+
+    </div>
   </div>
 </template>
 
