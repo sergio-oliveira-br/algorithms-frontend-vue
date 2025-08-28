@@ -116,7 +116,7 @@
         <p>{{ generationErrorMessage }}</p>
       </div>
 
-      
+
 
       <!-- SORTER -->
       <p class="mt-4 pt-2 border-t border-stone-200 text-lg text-gray-600 text-center">Sorter</p>
@@ -151,32 +151,37 @@
 
 
       <!-- LINEAR SEARCH -->
-      <p class="mt-4 pt-2 border-t border-stone-200 text-lg text-gray-600 text-center">Linear Search</p>
+      <div v-if="generatedNumbersArray.length > 1">
+        <p class="mt-4 pt-2 border-t border-stone-200 text-lg text-gray-600 text-center">Linear Search</p>
 
-      <div class="flex items-center space-x-4">
-        <div class="flex items-center">
-          <input type="radio" id="findMin" value="Min" name="findStrategy" v-model="strategyName" class="mr-2">
-          <label class="block text-gray-500 font-bold mb-2" for="findMin">Find Minimum</label>
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center">
+            <input type="radio" id="findMin" value="Min" name="findStrategy" v-model="strategyName" class="mr-2">
+            <label class="block text-gray-500 font-bold mb-2" for="findMin">Find Minimum</label>
+          </div>
+
+          <div class="flex items-center">
+            <input type="radio" id="findMax" value="Max" name="findStrategy" v-model="strategyName" class="mr-2">
+            <label class="block text-gray-500 font-bold mb-2" for="findMax">Find Maximum</label>
+          </div>
+
+          <div class="flex items-center">
+            <input type="radio" value="checkForDuplicates" v-model="strategyName" class="mr-2">
+            <label class="block text-gray-500 font-bold mb-2" for="findMax">Check for Duplicates</label>
+          </div>
         </div>
 
-        <div class="flex items-center">
-          <input type="radio" id="findMax" value="Max" name="findStrategy" v-model="strategyName" class="mr-2">
-          <label class="block text-gray-500 font-bold mb-2" for="findMax">Find Maximum</label>
+        <!-- OUTPUT: FIND MIN & MAX -->
+        <div v-if="foundValue" class="mt-3 p-4 bg-lime-50 rounded-lg border border-lime-200">
+          <p class="font-bold">
+            {{ strategyName === 'Min' ? 'Minimum Value Found:' : 'Maximum Value Found:' }}
+          </p>
+          <p class="mt-2 text-lg font-mono">{{ foundValue }}</p>
         </div>
 
-        <div class="flex items-center">
-          <input type="radio" value="checkForDuplicates" v-model="strategyName" class="mr-2">
-          <label class="block text-gray-500 font-bold mb-2" for="findMax">Check for Duplicates</label>
-        </div>
+
       </div>
 
-      <!-- OUTPUT: FIND MIN & MAX -->
-      <div v-if="foundValue" class="mt-3 p-4 bg-lime-50 rounded-lg border border-lime-200">
-        <p class="font-bold">
-          {{ strategyName === 'Min' ? 'Minimum Value Found:' : 'Maximum Value Found:' }}
-        </p>
-        <p class="mt-2 text-lg font-mono">{{ foundValue }}</p>
-      </div>
 
       <!-- CHECK FOR DUPLICATES: Output -->
       <div v-if="duplicatesResult" class="mt-2 p-4 bg-slate-50 rounded-lg border border-gray-200">
