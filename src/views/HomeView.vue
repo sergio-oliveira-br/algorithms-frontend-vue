@@ -42,8 +42,12 @@
   // GENERETE RANDOM NUMBERS
   const handleGenerateNumbers = async () => {
 
+    // cleaunp
     duplicatesResult.value = null;
     pageErrorMessage.value = null;
+    foundValue.value = null;
+    duplicatesResult.value = null;
+    strategyName.value = null;
 
     await generateNumbers();
 
